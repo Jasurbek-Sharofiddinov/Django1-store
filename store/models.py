@@ -15,8 +15,9 @@ class Collection(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField()
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now_add=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
@@ -24,9 +25,9 @@ class Product(models.Model):
 
 
 class Customer(models.Model):
-    members1 = 'A',
-    members2 = 'B',
-    members3 = 'C',
+    members1 = 'A'
+    members2 = 'B'
+    members3 = 'C'
 
     Membership_Choices = [
         (members1, 'Azim'),
@@ -40,10 +41,15 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=Membership_Choices, default=members2)
 
+    class Meta:
+        db_table = 'store_customers'
+        indexes = [
+            models.Index(fields=['last_name', 'first_name'])
+            ]
 
 class Order(models.Model):
-    pendin = 'P',
-    complet = 'C',
+    pendin = 'P'
+    complet = 'C'
     fail = 'F'
     Payment_Status = [
         (pendin, 'Pending'),
